@@ -3,10 +3,12 @@ import ShoppingHeader from "./header";
 
 function ShoppingLayout() {
   return (
-    <div className="flex flex-col bg-white overflow-hidden">
-      {/* common header */}
+    // This parent div now has a defined height and hides its own overflow
+    <div className="flex flex-col h-screen bg-white">
       <ShoppingHeader />
-      <main className="flex flex-col w-full">
+      
+      {/* By adding overflow-y-auto, this main element becomes the scrollable container */}
+      <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
     </div>

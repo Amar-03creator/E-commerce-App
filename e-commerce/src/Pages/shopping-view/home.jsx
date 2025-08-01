@@ -45,6 +45,8 @@ function ShoppingHome() {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const getCartItems = useSelector((state) => state.shoppingCart.cartItems?.items || []);
+
 
 
   function handleNavigateToListingPage(getCurrentItem, section) {
@@ -60,16 +62,27 @@ function ShoppingHome() {
     dispatch(fetchProductDetails(productId));
   }
 
-  function handleAddToCart(productId) {
+  function handleAddToCart(productId, totalStock) {
+
+    const indexOfCurrentItem = getCartItems.findIndex(item => item.productId === productId);
+
+    if (indexOfCurrentItem > -1) {
+      const currentQuantity = getCartItems[indexOfCurrentItem].quantity;
+      if (currentQuantity + 1 > totalStock) {
+        toast.error(`Only ${currentQuantity} items were available. You cannot add more items to cart.`);
+        return;
+      }
+    }
+
     dispatch(
       addToCart({
         userId: user?.id,
-        productId: productId,
+        productId,
         quantity: 1
       })
     ).then((data) => {
       if (data?.payload?.success) {
-        dispatch(fetchCartItems(user?.id)); // Refresh cart items after adding
+        dispatch(fetchCartItems(user?.id));
         toast.success(data.payload.message || "Product added to cart successfully!");
       } else {
         toast.error(data?.payload?.message || "Failed to add product to cart");

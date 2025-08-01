@@ -281,6 +281,14 @@ button:focus-visible {
   * {
     @apply border-border outline-ring/50;
   }
+  /* This ensures the body has a background, takes up the full height,
+     and allows the sticky header to work correctly. */
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
+
   body {
     @apply bg-background text-foreground;
   }

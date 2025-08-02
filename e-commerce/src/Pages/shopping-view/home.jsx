@@ -97,79 +97,120 @@ function ShoppingHome() {
   }, [productDetails]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((currentSlide) => (currentSlide + 1) % 4);
-    }, 3000); // Change slide every 4 seconds
+    if (featureImageList && featureImageList.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImageList.length);
+      }, 4000); 
 
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, []);
+      return () => clearInterval(interval);
+    }
+  }, [featureImageList]);
 
 
 
   useEffect(() => {
-    // Dispatch an action to set the current page in the store
     dispatch(fetchAllFilteredProducts({ filterParams: {}, sortParams: 'price-lowtohigh' }));
   }, [dispatch]);
 
-  console.log("Product List:", productList);
 
   useEffect(() => {
     dispatch(getFeatureImages());
   }, [dispatch])
 
-  return <div className="flex flex-col min-h-screen">
-    <div className="relative w-full h-[600px] overflow-hidden">
-      {
-        featureImageList && featureImageList.length > 0
-          ? featureImageList.map((slide, index) => (
-            <img
-              src={slide?.image}
-              key={index}
-              className={`${currentSlide === index ? 'opacity-100' : 'opacity-0'} absolute w-full h-full object-cover transition-opacity duration-800 ease-in-out`}
-            />
-          )) : null
-      }
-      <Button variant='outline'
-        onClick={() => setCurrentSlide((currentSlide - 1 + featureImageList.length) % featureImageList.length)}
-        className='absolute top-1/2 left-4 z-20 bg-black/30 hover:bg-white/30 transition-colors duration-300 hover:cursor-pointer'>
-        <ChevronLeftIcon className='w-4 h-4' />
-      </Button>
-      <Button variant='outline'
-        onClick={() => setCurrentSlide((currentSlide + 1) % featureImageList.length)}
-        className='absolute top-1/2 right-4 z-20 bg-black/30 hover:bg-white/30 transition-colors duration-300 hover:cursor-pointer'>
-        <ChevronRightIcon className='w-4 h-4' />
-      </Button>
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % featureImageList.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + featureImageList.length) % featureImageList.length);
+  };
+
+  return <div className="flex flex-col bg-gray-50">
+    {/* --- UPDATE: Container for Carousel --- */}
+    {/* This container has a black background and top padding to create the "gap" */}
+    <div className="pt-4">
+      <div className="relative w-full h-[550px] md:h-[650px] overflow-hidden">
+        <div
+          className="flex transition-transform ease-out duration-700 h-full"
+          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+        >
+          {
+            featureImageList && featureImageList.length > 0
+              ? featureImageList.map((slide, index) => (
+                <div key={index} className="w-full h-full flex-shrink-0">
+                  <img
+                    src={slide?.image}
+                    alt={`Slide ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )) : <div className="w-full h-full flex-shrink-0 bg-gray-200"></div>
+          }
+        </div>
+
+        <div className="absolute inset-0 flex items-center justify-between p-4">
+          <Button
+            variant='ghost'
+            size="icon"
+            onClick={prevSlide}
+            className='rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors'
+          >
+            <ChevronLeftIcon className='w-6 h-6' />
+          </Button>
+          <Button
+            variant='ghost'
+            size="icon"
+            onClick={nextSlide}
+            className='rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors'
+          >
+            <ChevronRightIcon className='w-6 h-6' />
+          </Button>
+        </div>
+
+        <div className="absolute bottom-4 right-0 left-0">
+          <div className="flex items-center justify-center gap-2">
+            {featureImageList.map((_, i) => (
+              <div
+                key={i}
+                onClick={() => setCurrentSlide(i)}
+                className={`transition-all w-3 h-3 bg-white rounded-full cursor-pointer ${currentSlide === i ? "p-2" : "bg-opacity-50"}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
-    <section className='py-12 bg-gray-50'>
+
+
+    {/* The rest of your page content remains the same */}
+    <section className='py-12'>
       <div className='container mx-auto px-4'>
         <h2 className='text-3xl font-bold text-center mb-8'>Shop by Category</h2>
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6'>
           {
             categoriesWithIcon.map((categoryItem) => (
-              <Card onClick={() => handleNavigateToListingPage(categoryItem, 'category')} className={'flex flex-col items-center p-2 hover:shadow-2xl hover:cursor-pointer transition-transform hover:scale-102 duration-300'} key={categoryItem.id}>
+              <Card onClick={() => handleNavigateToListingPage(categoryItem, 'category')} className={'flex flex-col items-center p-2 bg-white hover:shadow-xl hover:cursor-pointer transition-all duration-300 hover:scale-105'} key={categoryItem.id}>
                 <CardContent className={'flex flex-col items-center justify-center p-6'}>
                   <categoryItem.icon className='w-12 h-12 text-gray-700 mb-2' />
                   <h3 className='text-lg font-semibold'>{categoryItem.label}</h3>
                 </CardContent>
-
               </Card>
             ))}
         </div>
       </div>
     </section>
 
-    <section className='py-12 bg-gray-50'>
+    <section className='py-12'>
       <div className='container mx-auto px-4'>
         <h2 className='text-3xl font-bold text-center mb-8'>Shop by Brand</h2>
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6'>
           {
             brandsWithIcon.map((brandItem) => (
-              <Card onClick={() => handleNavigateToListingPage(brandItem, 'brand')} className={'flex flex-col items-center p-2 hover:shadow-2xl hover:cursor-pointer transition-transform hover:scale-102 duration-300'} key={brandItem.id}>
+              <Card onClick={() => handleNavigateToListingPage(brandItem, 'brand')} className={'flex flex-col items-center p-2 bg-white hover:shadow-xl hover:cursor-pointer transition-all duration-300 hover:scale-105'} key={brandItem.id}>
                 <CardContent className={'flex flex-col items-center justify-center p-6 py-8'}>
                   <img src={brandItem.icon} alt={brandItem.label} className='w-12 h-12 mb-2 object-contain' loading='lazy' />
-                  <h3 className='text-lg  font-mono'>{brandItem.label}</h3>
+                  <h3 className='text-lg font-mono'>{brandItem.label}</h3>
                 </CardContent>
-
               </Card>
             ))}
         </div>
@@ -185,7 +226,7 @@ function ShoppingHome() {
               product={product}
               handleGetProductDetails={handleGetProductDetails}
               handleAddToCart={handleAddToCart}
-              key={product.id}
+              key={product._id}
             />
             ) :
               <div className='col-span-4 text-center text-gray-500'>No products available</div>

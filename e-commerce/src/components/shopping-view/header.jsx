@@ -128,7 +128,7 @@ function ShoppingHeader() {
   const { user } = useSelector((state) => state.auth);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 shadow-md border-b">
+    <header className="sticky top-0 z-50 w-full bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 shadow-lg border-b">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <Sheet>
           <SheetTrigger asChild>

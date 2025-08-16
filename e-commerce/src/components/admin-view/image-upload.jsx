@@ -4,8 +4,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import axios from "axios";
-import { Skeleton } from "../ui/skeleton";
+import apiClient from '../../api/axiosConfig';import { Skeleton } from "../ui/skeleton";
 
 
 
@@ -50,7 +49,7 @@ function ProductImageUpload({
     const data = new FormData();
     data.append("my_file", imageFile);
 
-    const response = await axios.post('http://localhost:5000/api/admin/products/upload-image', data);
+    const response = await apiClient.post('http://localhost:5000/api/admin/products/upload-image', data);
     console.log(response, "response");
     if (response?.data?.success) {
       setUploadedImageUrl(response.data.result);

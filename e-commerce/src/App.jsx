@@ -26,6 +26,7 @@ import SearchProducts from "./Pages/shopping-view/search"
 
 function App() {
 
+  console.log("THE LIVE API URL IS:", import.meta.env.VITE_API_URL);
   const { user, isAuthenticated, isLoading } = useSelector(state => state.auth)
   const dispatch = useDispatch();
 

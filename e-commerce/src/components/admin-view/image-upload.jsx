@@ -1,12 +1,10 @@
-
 import { useEffect, useRef } from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import apiClient from '../../api/axiosConfig';import { Skeleton } from "../ui/skeleton";
-
-
+import apiClient from '../../api/axiosConfig';
+import { Skeleton } from "../ui/skeleton";
 
 function ProductImageUpload({
   imageFile,
@@ -49,13 +47,14 @@ function ProductImageUpload({
     const data = new FormData();
     data.append("my_file", imageFile);
 
-    const response = await apiClient.post('http://localhost:5000/api/admin/products/upload-image', data);
+    // CORRECTED: Uses the relative path
+    const response = await apiClient.post('/api/admin/products/upload-image', data);
+    
     console.log(response, "response");
     if (response?.data?.success) {
       setUploadedImageUrl(response.data.result);
       setImageLoadingState(false);
     }
-
   }
 
   useEffect(() => {
@@ -65,7 +64,7 @@ function ProductImageUpload({
   return (
     <div className={`w-full ${isCustomStyling ? '' : 'max-w-md mx-auto'}`}>
       <Label className="text-lg font-semibold mb-2 block">Upload Image</Label>
-      <div onDragOver={handleDragOver} onDrop={handleDrop} className={`${isEditMode?"opacity-60": ""}border-2 border-dashed border-gray-300 rounded-lg p-4 flex items-center justify-center`}>
+      <div onDragOver={handleDragOver} onDrop={handleDrop} className={`${isEditMode ? "opacity-60" : ""}border-2 border-dashed border-gray-300 rounded-lg p-4 flex items-center justify-center`}>
         <Input
           id='image-upload'
           type="file"
@@ -73,7 +72,7 @@ function ProductImageUpload({
           ref={inputRef}
           onChange={handleImageFileChange}
           disabled={isEditMode}
-          />
+        />
         {
           !imageFile ? (
             <Label htmlFor="image-upload" className={`${isEditMode ? "cursor-not-allowed" : ""}flex flex-col items-center justify-center h-32 cursor-pointer`}>
@@ -95,13 +94,11 @@ function ProductImageUpload({
                 <XIcon className="w-4 h-4" />
                 <span className="sr-only">Remove File</span>
               </Button>
-
             </div>
-          )}
+            )}
       </div>
     </div>
   );
 }
 
 export default ProductImageUpload;
-// Compare this snippet from e-commerce/src/components/ui/input.jsx:

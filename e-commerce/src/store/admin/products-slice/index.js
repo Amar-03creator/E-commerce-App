@@ -9,7 +9,7 @@ const initialState = {
 export const addNewProduct = createAsyncThunk(
   '/products/addnewproduct',
   async (formData) => {
-    const result = await apiClient.post('http://localhost:5000/api/admin/products/add', formData, {
+    const result = await apiClient.post('/api/admin/products/add', formData, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -21,8 +21,7 @@ export const addNewProduct = createAsyncThunk(
 export const fetchAllProducts = createAsyncThunk(
   '/products/fetchAllProducts',
   async () => {
-    const result = await apiClient.get('http://localhost:5000/api/admin/products/get'    
-    );
+    const result = await apiClient.get('/api/admin/products/get');
     return result?.data;
   }
 );
@@ -30,7 +29,7 @@ export const fetchAllProducts = createAsyncThunk(
 export const editProduct = createAsyncThunk(
   '/products/editProduct',
   async ({ id, formData }) => {
-    const result = await apiClient.put(`http://localhost:5000/api/admin/products/edit/${id}`, formData, {
+    const result = await apiClient.put(`/api/admin/products/edit/${id}`, formData, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -42,9 +41,8 @@ export const editProduct = createAsyncThunk(
 export const deleteProduct = createAsyncThunk(
   '/products/deleteProduct',
   async (id) => {
-    const result = await apiClient.deletee(`http://localhost:5000/api/admin/products/delete/${id}`
-
-    );
+    // Note: Corrected typo from .deletee to .delete
+    const result = await apiClient.delete(`/api/admin/products/delete/${id}`);
     return result?.data;
   }
 );
@@ -63,12 +61,11 @@ const AdminProductsSlice = createSlice({
         state.isLoading = false;
         state.productList = action.payload.data;
       })
-      .addCase(fetchAllProducts.rejected, (state,action) => {
+      .addCase(fetchAllProducts.rejected, (state, action) => {
         console.log(action.payload, "action.payload");
         state.isLoading = false;
         state.productList = [];
       })
-
   },
 });
 export default AdminProductsSlice.reducer;

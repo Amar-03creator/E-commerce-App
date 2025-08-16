@@ -1,14 +1,11 @@
 import apiClient from '../../../api/axiosConfig';
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-// Initial state for the shopping product slice
 const initialState = {
   productList: [],
   isLoading: false,
   productDetails: null
-
 };
-
 
 export const fetchAllFilteredProducts = createAsyncThunk(
   "/products/fetchAllProducts",
@@ -17,21 +14,18 @@ export const fetchAllFilteredProducts = createAsyncThunk(
       ...filterParams,
       sortBy: sortParams
     });
-    const result = await apiClient.get(`http://localhost:5000/api/shop/products/get?${query}`
-    );
-    
+    const result = await apiClient.get(`/api/shop/products/get?${query}`);
     return result?.data;
   }
-)
+);
 
 export const fetchProductDetails = createAsyncThunk(
   "/products/fetchProductDetails",
   async (id) => {
-    const result = await apiClient.get(`http://localhost:5000/api/shop/products/get/${id}`);
+    const result = await apiClient.get(`/api/shop/products/get/${id}`);
     return result?.data;
   }
-)
-
+);
 
 const shoppingProductSlice = createSlice({
   name: 'shoppingProduct',
@@ -47,7 +41,6 @@ const shoppingProductSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(fetchAllFilteredProducts.fulfilled, (state, action) => {
-        
         state.productList = action.payload.data;
         state.isLoading = false;
       })
@@ -69,6 +62,7 @@ const shoppingProductSlice = createSlice({
         state.error = "Something went wrong";
       });
   }
-})
+});
+
 export const { setProductDetails } = shoppingProductSlice.actions;
 export default shoppingProductSlice.reducer;

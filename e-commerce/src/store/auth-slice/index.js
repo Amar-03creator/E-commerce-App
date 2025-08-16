@@ -1,80 +1,63 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import apiClient from '../../api/axiosConfig';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import apiClient from '../../api/axiosConfig'; // Your centralized API client
 
 const initialState = {
   isAuthenticated: false,
   isLoading: true,
   user: null
-
 };
 
+// CORRECTED: Uses relative path '/api/auth/register'
 export const registerUser = createAsyncThunk('/auth/register',
   async (formData) => {
-    const response = await apiClient.post('http://localhost:5000/api/auth/register', formData, {
-      withCredentials: true
-    }
-    );
-
-    return response.data;
-  }
-)
-
-
-
-export const loginUser = createAsyncThunk('/auth/login',
-  async (formData) => {
-    const response = await apiClient.post('http://localhost:5000/api/auth/login', formData, {
-      withCredentials: true
-    }
-    );
-
-    return response.data;
-  }
-)
-
-
-export const logoutUser = createAsyncThunk('/auth/logout',
-  async () => {
-    const response = await apiClient.post('http://localhost:5000/api/auth/logout', {
-      withCredentials: true
-    }
-    );
-
-    return response.data;
-  })
-
-
-export const checkAuth = createAsyncThunk('/auth/checkauth',
-  async () => {
-    const response = await apiClient.get('http://localhost:5000/api/auth/check-auth',{
-      withCredentials: true,
-      headers: {
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
-      }
-    }
-    );
-
+    const response = await apiClient.post('/api/auth/register', formData);
     return response.data;
   }
 );
 
+// CORRECTED: Uses relative path '/api/auth/login'
+export const loginUser = createAsyncThunk('/auth/login',
+  async (formData) => {
+    const response = await apiClient.post('/api/auth/login', formData);
+    return response.data;
+  }
+);
+
+// CORRECTED: Uses relative path '/api/auth/logout'
+export const logoutUser = createAsyncThunk('/auth/logout',
+  async () => {
+    const response = await apiClient.post('/api/auth/logout');
+    return response.data;
+  }
+);
+
+// CORRECTED: Uses relative path '/api/auth/check-auth'
+export const checkAuth = createAsyncThunk('/auth/checkauth',
+  async () => {
+    const response = await apiClient.get('/api/auth/check-auth', {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
+      }
+    });
+    return response.data;
+  }
+);
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
     setUser: (state, action) => {
-
+      // your reducer logic here
     }
   },
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
-        state.isLoading = true
+        state.isLoading = true;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        // state.user = action.payload;
         state.user = null;
         state.isAuthenticated = false;
       })
@@ -84,10 +67,9 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
       })
       .addCase(loginUser.pending, (state) => {
-        state.isLoading = true
+        state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log(action);
         state.isLoading = false;
         state.user = action.payload.success ? action.payload.user : null;
         state.isAuthenticated = action.payload.success;
@@ -98,7 +80,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
       })
       .addCase(checkAuth.pending, (state) => {
-        state.isLoading = true
+        state.isLoading = true;
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -111,7 +93,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
       })
       .addCase(logoutUser.pending, (state) => {
-        state.isLoading = true
+        state.isLoading = true;
       })
       .addCase(logoutUser.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -122,9 +104,9 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
-      })
+      });
   }
 });
 
 export const { setUser } = authSlice.actions;
-export default authSlice.reducer
+export default authSlice.reducer;

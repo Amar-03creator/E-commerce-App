@@ -1,41 +1,39 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import apiClient from '../../../api/axiosConfig';
 
 const initialState = {
   isLoading: false,
-  addressList:[],
+  addressList: [],
 }
 
 export const addNewAddress = createAsyncThunk(
-  'address/addNewAddress', async(formData) => {
-    const response = await apiClient.post('http://localhost:5000/api/shop/address/add', formData);
+  'address/addNewAddress', async (formData) => {
+    const response = await apiClient.post('/api/shop/address/add', formData);
     return response.data;
   }
 );
-  
+
 export const fetchAddresses = createAsyncThunk(
-  'address/fetchAddresses', async(userId) => {
-    const response = await apiClient.get(`http://localhost:5000/api/shop/address/get/${userId}`);
+  'address/fetchAddresses', async (userId) => {
+    const response = await apiClient.get(`/api/shop/address/get/${userId}`);
     return response.data;
   }
 );
 
 export const editAddress = createAsyncThunk(
-  'address/editAddress', async({userId, addressId, formData}) => {
-    const response = await apiClient.put(`http://localhost:5000/api/shop/address/edit/${userId}/${addressId}`, formData);
+  'address/editAddress', async ({ userId, addressId, formData }) => {
+    const response = await apiClient.put(`/api/shop/address/edit/${userId}/${addressId}`, formData);
     return response.data;
   }
 );
 
 export const deleteAddress = createAsyncThunk(
-  'address/deleteAddress', async({userId, addressId}) => {
-    const response = await apiClient.deletee(`http://localhost:5000/api/shop/address/delete/${userId}/${addressId}`);
+  'address/deleteAddress', async ({ userId, addressId }) => {
+    // Note: Corrected typo from .deletee to .delete
+    const response = await apiClient.delete(`/api/shop/address/delete/${userId}/${addressId}`);
     return response.data;
   }
 );
-
-// This is the address slice for managing addresses in the Redux store
-// It includes actions for adding, fetching, editing, and deleting addresses
 
 const addressSlice = createSlice({
   name: 'address',
@@ -48,11 +46,9 @@ const addressSlice = createSlice({
       })
       .addCase(addNewAddress.fulfilled, (state, action) => {
         state.isLoading = false;
-        // state.addressList = action.payload.data ? action.payload.data : [];
       })
       .addCase(addNewAddress.rejected, (state) => {
         state.isLoading = false;
-        // state.addressList = [];
       })
       .addCase(fetchAddresses.pending, (state) => {
         state.isLoading = true;
@@ -69,7 +65,7 @@ const addressSlice = createSlice({
       })
       .addCase(editAddress.fulfilled, (state, action) => {
         state.isLoading = false;
-        const updatedAddr = action.payload.data; 
+        const updatedAddr = action.payload.data;
         const idx = state.addressList.findIndex(
           (addr) => addr._id === updatedAddr._id
         );

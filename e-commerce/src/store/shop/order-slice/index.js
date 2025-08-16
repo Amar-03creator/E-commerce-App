@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import apiClient from '../../../api/axiosConfig';
+
 const initialState = {
   approvalURL: null,
   isLoading: false,
@@ -12,10 +13,9 @@ export const createNewOrder = createAsyncThunk(
   "/order/createNewOrder",
   async (orderData) => {
     const response = await apiClient.post(
-      "http://localhost:5000/api/shop/order/create",
+      "/api/shop/order/create",
       orderData
     );
-
     return response.data;
   }
 );
@@ -24,14 +24,13 @@ export const capturePayment = createAsyncThunk(
   "/order/capturePayment",
   async ({ paymentId, payerId, orderId }) => {
     const response = await apiClient.post(
-      "http://localhost:5000/api/shop/order/capture",
+      "/api/shop/order/capture",
       {
         paymentId,
         payerId,
         orderId,
       }
     );
-
     return response.data;
   }
 );
@@ -40,9 +39,8 @@ export const getAllOrdersByUserId = createAsyncThunk(
   "/order/getAllOrdersByUserId",
   async (userId) => {
     const response = await apiClient.get(
-      `http://localhost:5000/api/shop/order/list/${userId}`
+      `/api/shop/order/list/${userId}`
     );
-
     return response.data;
   }
 );
@@ -51,9 +49,8 @@ export const getOrderDetails = createAsyncThunk(
   "/order/getOrderDetails",
   async (id) => {
     const response = await apiClient.get(
-      `http://localhost:5000/api/shop/order/details/${id}`
+      `/api/shop/order/details/${id}`
     );
-
     return response.data;
   }
 );
@@ -111,5 +108,4 @@ const shoppingOrderSlice = createSlice({
 });
 
 export const { resetOrderDetails } = shoppingOrderSlice.actions;
-
 export default shoppingOrderSlice.reducer;

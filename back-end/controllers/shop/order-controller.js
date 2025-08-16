@@ -3,7 +3,7 @@ const {
   paypalClient,
   OrdersCreateRequest,
   OrdersCaptureRequest,
-} = require("../../helpers/paypal");
+} = require("../../Helpers/paypal");
 const Order = require("../../models/order");
 const Cart = require("../../models/cart");
 const Product = require("../../models/Products");

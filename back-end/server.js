@@ -70,4 +70,9 @@ app.get("/", (req, res) => {
 
 // --- CHANGE 4: EXPORT THE APP FOR SERVERLESS ENVIRONMENT ---
 // We remove app.listen() and export the app for Render to use.
-module.exports = app;
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

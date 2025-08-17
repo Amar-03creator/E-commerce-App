@@ -6,15 +6,12 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from 'sonner';
 
-
-
 const initialState = {
   email: '',
   password: ''
 }
 
 function AuthLogin() {
-
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
 
@@ -24,33 +21,50 @@ function AuthLogin() {
       if(data?.payload?.success){
         toast.success(data?.payload?.message);
       } else {
-        toast.error(data?.payload?.message);  //This is destructive equivalent
+        toast.error(data?.payload?.message);
       }
     });
   }
 
   return (
-    <div className="mx-auto w-full max-w-md space-y-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Sign in to your account
-        </h1>
-        <p>Don't have an account?
-          <Link className="font-medium ml-2 text-primary hover:underline" to='/auth/register'>
-            Register
-          </Link>
-        </p>
+    <div className="w-full max-w-sm sm:max-w-md mx-auto">
+      {/* Header Section */}
+      <div className="text-center mb-8">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            Welcome Back
+          </h1>
+          <p className="text-gray-600 text-sm sm:text-base">
+            Sign in to your account to continue
+          </p>
+        </div>
       </div>
-      <CommonForm
-        formControls={loginFormControls}
-        buttonText={'Sign In'}
-        formData={formData}
-        setFormData={setFormData}
-        onSubmit={onSubmit}
-      />
+
+      {/* Form Card */}
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:p-8">
+        <CommonForm
+          formControls={loginFormControls}
+          buttonText={'Sign In'}
+          formData={formData}
+          setFormData={setFormData}
+          onSubmit={onSubmit}
+        />
+        
+        {/* Footer */}
+        <div className="mt-6 text-center">
+          <p className="text-gray-600 text-sm sm:text-base">
+            Don't have an account?{' '}
+            <Link 
+              className="text-blue-600 hover:text-blue-700 font-medium hover:underline transition-colors" 
+              to='/auth/register'
+            >
+              Sign up
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
 
 export default AuthLogin;
-

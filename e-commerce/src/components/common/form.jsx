@@ -24,11 +24,12 @@ function CommonForm({
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
             type={getControlItem.type}
-            value= {value}
-            onChange= {event=> setFormData({
+            value={value}
+            onChange={event=> setFormData({
               ...formData,
-              [getControlItem.name] : event.target.value
+              [getControlItem.name]: event.target.value
             })}
+            className="h-10 sm:h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-colors"
           />
         );
         break;
@@ -39,10 +40,10 @@ function CommonForm({
             ...formData,
             [getControlItem.name]: value
           })} value={value}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full h-10 sm:h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl">
               <SelectValue placeholder={getControlItem.label} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl border-gray-200">
               {getControlItem.options && getControlItem.options.length > 0
                 ? getControlItem.options.map((optionItem) => (
                     <SelectItem key={optionItem.id} value={optionItem.id}>
@@ -55,18 +56,18 @@ function CommonForm({
         );
         break;
 
-
-        case "textarea":
+      case "textarea":
         element = (
           <Textarea
-            name= {getControlItem.name}
+            name={getControlItem.name}
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
             value={value}
-            onChange= {event=> setFormData({
+            onChange={event=> setFormData({
               ...formData,
-              [getControlItem.name] : event.target.value
+              [getControlItem.name]: event.target.value
             })}
+            className="min-h-24 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl resize-none transition-colors"
           />
         );
         break;
@@ -78,10 +79,11 @@ function CommonForm({
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
             type={getControlItem.type}
-            onChange= {event=> setFormData({
+            onChange={event=> setFormData({
               ...formData,
-              [getControlItem.name] : event.target.value
+              [getControlItem.name]: event.target.value
             })}
+            className="h-10 sm:h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-colors"
           />
         );
         break;
@@ -91,19 +93,29 @@ function CommonForm({
   }
 
   return (
-    <form autoComplete="off" onSubmit={onSubmit}>
-      <div className="flex flex-col gap-3">
+    <form autoComplete="off" onSubmit={onSubmit} className="space-y-4 sm:space-y-6">
+      <div className="space-y-4 sm:space-y-5">
         {formControls.map((controlItem) => (
-          <div className="grid-full gap-1.5" key={controlItem.name}>
-            <label className="mb-1">{controlItem.label}</label>
+          <div className="space-y-2" key={controlItem.name}>
+            <label className="text-sm font-medium text-gray-700 block">
+              {controlItem.label}
+            </label>
             {renderItemByComponentType(controlItem)}
           </div>
         ))}
       </div>
+      
       <Button 
-      type="submit" 
-      disabled={isBtnDisabled}
-      className={`mt-2 w-full ${isBtnDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}>{buttonText || 'Submit'}</Button>
+        type="submit" 
+        disabled={isBtnDisabled}
+        className={`w-full h-10 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 ${
+          isBtnDisabled 
+            ? 'opacity-50 cursor-not-allowed' 
+            : 'hover:shadow-lg hover:shadow-blue-500/25'
+        }`}
+      >
+        {buttonText || 'Submit'}
+      </Button>
     </form>
   );
 }
